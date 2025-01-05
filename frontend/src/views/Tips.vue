@@ -6,12 +6,12 @@
     <div class="main-content">
       <section class="section ">
         
-        <DivisionTip />
-
+        <DivisionTip :totalTips="totalTips" :personsAmount="personsAmount" />
+        <PaymentMethod  :methods="methods" />
         
       </section>
       <section class="section ">
-        <ValueInput />
+        <InputTips @inputAmount="setTotalTips" @inputPersons="setPersonsAmount" @inputPayAmount="setPayAmount" />
       </section>
       <section class="section ">Section 3</section>
     </div>
@@ -24,15 +24,35 @@
 <script>
 import { defineComponent } from 'vue';
 import HeaderInfo from '@/components/HeaderInfo.vue';
-import ValueInput from '@/components/ValueInput.vue';
+import InputTips from '@/components/InputTips.vue';
 import DivisionTip from '@/components/DivisionTip.vue';
+import PaymentMethod from '@/components/PaymentMethod.vue';
 
 export default defineComponent({
   name: 'TipsView',
   components: {
     HeaderInfo,
-    ValueInput,
+    InputTips,
     DivisionTip,
+    PaymentMethod,
+  },
+  data() {
+    return {
+      totalTips: 0, // Inicializamos el valor de las propinas
+      methods: ['Efectivo', 'BBVA 1234', 'Santander 1234'],
+      personsAmount: 0,
+    };
+  },
+  methods: {
+    setTotalTips(newTotal) {
+      this.totalTips = Number(newTotal); // Actualizamos el valor de totalTips
+    },
+    setPersonsAmount(newPersons) {
+      this.personsAmount = Number(newPersons); // Actualizamos el valor de totalTips
+    },
+    setPayAmount(newPay) {
+      this.payAmount = Number(newPay); // Actualizamos el valor de totalTips
+    },
   },
 });
 </script>
