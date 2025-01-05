@@ -5,20 +5,4 @@ const api = axios.create({
 });
 
 
-//guardar las tiPs que se crean
-interface Tip {
-  // Define the properties of Tip here
-  title: string;
-  description: string;
-}
-
-export const createTip = async (tip: Tip) => {
-  try {
-    const response = await api.post("/tips", tip);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 export default api;
