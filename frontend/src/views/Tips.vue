@@ -4,7 +4,12 @@
       <HeaderInfo />
     </header>
     <div class="main-content">
-      <section class="section ">Section 1</section>
+      <section class="section ">
+        
+        <DivisionTip />
+
+        
+      </section>
       <section class="section ">
         <ValueInput />
       </section>
@@ -20,12 +25,14 @@
 import { defineComponent } from 'vue';
 import HeaderInfo from '@/components/HeaderInfo.vue';
 import ValueInput from '@/components/ValueInput.vue';
+import DivisionTip from '@/components/DivisionTip.vue';
 
 export default defineComponent({
   name: 'TipsView',
   components: {
     HeaderInfo,
     ValueInput,
+    DivisionTip,
   },
 });
 </script>
