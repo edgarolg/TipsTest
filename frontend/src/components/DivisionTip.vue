@@ -2,12 +2,16 @@
   <div>
     <div class="total-tips">
       <h2>Total de Propinas</h2>
-      <p class="amount">$ {{ totalTips }}  <button class="edit-button">✏️</button></p>
+      <p class="amount">
+        $ {{ totalTips }} <button class="edit-button">✏️</button>
+      </p>
     </div>
 
     <div class="division">
-      <label for="division-input">¿Entre cuántos quieres dividir las Propinas?</label>    
-      <p class="amount"> {{ personsAmount }} </p>
+      <label for="division-input"
+        >¿Entre cuántos quieres dividir las Propinas?</label
+      >
+      <p class="amount">{{ personsAmount }}</p>
       <p class="per-person">{{ perPerson }} x Persona</p>
     </div>
   </div>
@@ -15,7 +19,7 @@
 
 <script>
 export default {
-  name: 'DivisionTip',
+  name: "DivisionTip",
   props: {
     totalTips: {
       type: Number,
@@ -28,7 +32,7 @@ export default {
   },
   computed: {
     perPerson() {
-      if (!this.personsAmount || this.personsAmount < 1) return '0.00';
+      if (!this.personsAmount || this.personsAmount < 1) return "0.00";
       return (this.totalTips / this.personsAmount).toFixed(2);
     },
   },
