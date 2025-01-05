@@ -1,13 +1,21 @@
 import express from 'express';
-import { router } from './routes/routes';  // Importa el router desde routes.ts
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import { router } from './routes/routes';
 
 const app = express();
 const port = 3000;
 
-app.use(express.json()); // Usa el middleware nativo de express para manejar JSON
-app.use('/api', router);  // Usa el router para las rutas que comienzan con '/api'
+// Habilitar CORS
+app.use(cors());
 
+// Middleware para parsear JSON
+app.use(bodyParser.json());
+
+// Rutas
+app.use('/api', router);
+
+// Iniciar el servidor
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
 });
-

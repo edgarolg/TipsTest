@@ -42,4 +42,12 @@ router.get('/payments', (req: Request, res: Response) => {
   res.json({ payments });
 });
 
+
+//Ruta para borrar las propinas
+router.delete('/tips', (req: Request, res: Response) => {
+  tips.splice(0, tips.length);
+  res.json({ message: 'Propinas borradas' });
+});
+
+
 export { router };
