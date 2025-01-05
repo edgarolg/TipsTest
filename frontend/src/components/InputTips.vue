@@ -1,27 +1,37 @@
 <template>
   <div class="calculator">
     <div class="input-type">
-      <p>Ingresando: 
+      <p>
+        Ingresando:
         <span v-if="currentInput === 'tip'">Propina</span>
         <span v-if="currentInput === 'persons'">Número de personas</span>
         <span v-if="currentInput === 'pay'">Monto a pagar</span>
       </p>
     </div>
-    
+
     <div class="display">
       <p>$</p>
-      <p>{{ displayValue || '000.00' }}</p>
+      <p>{{ displayValue || "000.00" }}</p>
       <button @click="clear" class="clearButton">⌫</button>
     </div>
-    <hr style="border: 1px solid #000; margin: 0; width: 80%;" />
+    <hr style="border: 1px solid #000; margin: 0; width: 80%" />
     <div class="buttonsContainer">
-      <button v-for="n in 9" :key="n" @click="inputNumber(n % 10)" class="buttons">
+      <button
+        v-for="n in 9"
+        :key="n"
+        @click="inputNumber(n % 10)"
+        class="buttons"
+      >
         {{ n % 10 }}
       </button>
       <button @click="inputNumber('00')" class="buttons">00</button>
       <button @click="inputNumber('0')" class="buttons">0</button>
       <button @click="handleConfirm" class="buttons confirm">
-        <img src="@/../public/cheque.png" alt="Save" style="width: 30%; height: auto;" />
+        <img
+          src="@/../public/cheque.png"
+          alt="Save"
+          style="width: 30%; height: auto"
+        />
       </button>
     </div>
   </div>
@@ -31,10 +41,10 @@
 import axios from "axios";
 
 export default {
-  name: 'InputTips',
+  name: "InputTips",
   data() {
     return {
-      displayValue: '',
+      displayValue: "",
       tipAmount: "",
       personsAmount: "",
       payAmount: "",
@@ -50,20 +60,23 @@ export default {
     },
     async handleConfirm() {
       const numValue = parseFloat(this.displayValue);
-      
+
       if (!this.displayValue) {
         this.errorMessage = "Por favor, ingresa un valor válido.";
         return;
       }
 
-      switch(this.currentInput) {
+      switch (this.currentInput) {
         case "tip":
           // Para tip, guardamos en API y props
           this.loading = true;
           try {
-            const response = await axios.post("http://localhost:3000/api/tips", {
-              amount: numValue,
-            });
+            const response = await axios.post(
+              "http://localhost:3000/api/tips",
+              {
+                amount: numValue,
+              }
+            );
             this.successMessage = response.data.message;
             console.log(this.successMessage);
             this.tipAmount = numValue;
@@ -72,7 +85,8 @@ export default {
             this.currentInput = "persons";
           } catch (error) {
             console.error("Error al guardar la propina:", error);
-            this.errorMessage = error.response?.data?.message || "Error al guardar la propina.";
+            this.errorMessage =
+              error.response?.data?.message || "Error al guardar la propina.";
             return;
           } finally {
             this.loading = false;
@@ -83,9 +97,13 @@ export default {
           // Para persons, guardamos en API y props
           this.loading = true;
           try {
-            const response = await axios.post("http://localhost:3000/api/persons", {
-              'persons': numValue,
-              });
+            const response = await axios.post(
+              "http://localhost:3000/api/persons",
+              {
+                persons: numValue,
+                amount: this.tipAmount,
+              }
+            );
             this.successMessage = response.data.message;
             console.log(this.successMessage);
             this.personsAmount = numValue;
@@ -94,7 +112,8 @@ export default {
             this.currentInput = "pay";
           } catch (error) {
             console.error("Error al guardar la propina:", error);
-            this.errorMessage = error.response?.data?.message || "Error al guardar la propina.";
+            this.errorMessage =
+              error.response?.data?.message || "Error al guardar la propina.";
             return;
           } finally {
             this.loading = false;
@@ -105,7 +124,7 @@ export default {
           // Para pay, solo guardamos en props
           this.payAmount = numValue;
           this.$emit("inputPayAmount", numValue);
-          console.log("Cantidad de pago", this.payAmount); 
+          console.log("Cantidad de pago", this.payAmount);
           break;
       }
 
@@ -113,14 +132,8 @@ export default {
       this.displayValue = "";
     },
     clear() {
-      this.tipAmount = "";
-      this.personsAmount = "";
-      this.payAmount = "";
       this.displayValue = "";
-      this.currentInput = "tip";
-      this.errorMessage = "";
-      this.successMessage = "";
-    }
+    },
   },
 };
 </script>
@@ -135,7 +148,7 @@ export default {
   border-style: solid;
   border-radius: 10px;
   justify-items: center;
-  background-color: #E6E6E6;
+  background-color: #e6e6e6;
   padding: 20px;
 }
 
@@ -179,7 +192,7 @@ export default {
 }
 
 .confirm {
-  background-color: #F08D81;
+  background-color: #f08d81;
   color: white;
   align-self: center;
   width: 80%;

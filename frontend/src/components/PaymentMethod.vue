@@ -16,11 +16,12 @@
 
 <script>
 export default {
-  name: 'PaymentMethod',
-  props: ['methods', 'selectedMethod'],
+  name: "PaymentMethod",
+  props: ["methods", "selectedMethod"],
   methods: {
     selectMethod(method) {
-      this.$emit('select', method);
+      this.$emit("inputPaymentMethod", method);
+      console.log("metodo Pago", method);
     },
   },
 };
