@@ -1,5 +1,6 @@
 <template>
   <div class="header-info">
+    <p class="backTitle">&lt;</p> 
     <button class="backButton">Atrás</button>
     <h1 class="pageTitle">Pago de Propinas</h1>
     <div class="spacer"></div>
@@ -31,6 +32,12 @@ input {
   width: 200px;
 }
 
+
+.backTitle {
+  font-size: 24px;
+  color: #F08D81;
+  font-weight: bold;
+}
 .backButton {
   border: none;
   color: #F08D81;

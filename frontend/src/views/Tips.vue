@@ -3,7 +3,7 @@
     <header class="header">
       <HeaderInfo />
     </header>
-    <div class="main-content">
+    <div class="mainContent">
       <section class="section">
         <DivisionTip :totalTips="totalTips" :personsAmount="personsAmount" />
         
@@ -42,7 +42,7 @@
           :class="{'payButton': totalPaid > 0, 'payButtonDisabled': totalPaid === 0}"
           :disabled="remainingAmount > 0"
         >
-          Pagar {{ totalPaid }} Propinas
+          Pagar $ {{ totalPaid }} en Propinas
         </button>
       </div>
     </div>
@@ -199,10 +199,10 @@ export default defineComponent({
   height: 10vh;
 }
 
-.main-content {
+.mainContent {
   display: flex;
   flex: 1;
-  height: 60vh;
+  height: 68vh;
 }
 
 .section {
