@@ -57,6 +57,7 @@ import InputTips from "@/components/InputTips.vue";
 import DivisionTip from "@/components/DivisionTip.vue";
 import PaymentMethod from "@/components/PaymentMethod.vue";
 import PaymentsSection from "@/components/PaymentsSection.vue";
+import { savePayments, completePayment } from "@/api/tipsService";
 
 export default defineComponent({
   name: "TipsView",
@@ -108,7 +109,7 @@ export default defineComponent({
       // Elimina el pago del array en la posición especificada
       this.payments.splice(index, 1);
     },
-    handlePayment(newPayAmount) {
+    async handlePayment(newPayAmount) {
       // Validación de método de pago
       if (!this.selectedMethod) {
         alert("Por favor, selecciona un método de pago.");
@@ -136,19 +137,13 @@ export default defineComponent({
       this.payments.push(paymentEntry);
 
       // Realizamos la solicitud a la API
-      axios
-        .post("http://localhost:3000/api/payments", paymentRequest)
-        .then((response) => {
-          console.log("Respuesta de la API:", response.data);
-          // Realiza las acciones necesarias después de un pago exitoso
-        })
-        .catch((error) => {
-          console.error(
-            "Error al registrar el pago:",
-            error.response || error.message
-          );
-          alert("Hubo un error al registrar el pago. Intenta de nuevo.");
-        });
+      try {
+        const response = await savePayments(paymentRequest.payments, paymentRequest.amount);
+        console.log("Pagos registrados exitosamente:", response);
+        // Realiza las acciones necesarias después de un pago exitoso
+      } catch (error) {
+        console.error("Error al registrar pagos:", error);
+      }
     },
     submitTips: async function () {
       if (this.remainingAmount > 0) {
@@ -158,12 +153,8 @@ export default defineComponent({
 
       try {
         // Mandar propina por la API a la base de datos y esperar la respuesta
-        const response = await axios.post(
-          "http://localhost:3000/api/payments/complete",
-          {
-            amount: this.totalTips, // El monto total de las propinas que se desean completar
-          }
-        );
+        const response = await completePayment(this.totalTips);
+
         // Si la respuesta es exitosa, continúa con el resto de las acciones
         console.log(
           "Propina Completada",
@@ -177,10 +168,9 @@ export default defineComponent({
         this.personsAmount = 0;
         this.payments = [];
         this.payAmount = "";
-        this.selectedMethod = "tips";
+        this.selectedMethod = "";
         this.currentInput = "tip";
         // Aquí puedes manejar lo que quieras hacer con la respuesta, si es necesario
-        console.log("CAmbio el estaddo a ", this.currentInput);
         console.log("Respuesta de la API:", response.data);
       } catch (error) {
         // Si ocurre un error en la llamada a la API
