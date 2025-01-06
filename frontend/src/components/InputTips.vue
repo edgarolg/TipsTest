@@ -1,16 +1,7 @@
 <template>
   <div class="calculator">
-    <div class="input-type">
-      <p>
-        Ingresando:
-        <span v-if="currentInput === 'tip'">Propina</span>
-        <span v-if="currentInput === 'persons'">Número de personas</span>
-        <span v-if="currentInput === 'pay'">Monto a pagar</span>
-      </p>
-    </div>
-
     <div class="display">
-      <p>$</p>
+      <p>{{ displaySymbol }}</p>
       <p>{{ displayValue || "000.00" }}</p>
       <button @click="clear" class="clearButton">⌫</button>
     </div>
@@ -20,19 +11,26 @@
         v-for="n in 9"
         :key="n"
         @click="inputNumber(n % 10)"
-        class="buttons"
+        class="buttonsDisplay"
       >
         {{ n % 10 }}
       </button>
-      <button @click="inputNumber('00')" class="buttons">00</button>
-      <button @click="inputNumber('0')" class="buttons">0</button>
-      <button @click="handleConfirm" class="buttons confirm">
+      <button @click="inputNumber('00')" class="buttonsDisplay">00</button>
+      <button @click="inputNumber('0')" class="buttonsDisplay">0</button>
+      <button @click="handleConfirm" 
+          :class="['buttonsDisplay', 'buttonConfirm', { buttonConfirmdisabled: isDisabled }]"
+          
+        >
         <img
           src="@/../public/cheque.png"
           alt="Save"
           style="width: 30%; height: auto"
         />
       </button>
+
+    </div>
+    <div  v-if="currentInput === 'pay'"  class="remainingTip">
+      <p>Cantidad restante: ${{ remainingAmount.toFixed(2) }}</p>
     </div>
   </div>
 </template>
@@ -52,7 +50,24 @@ export default {
       loading: false,
       successMessage: "",
       errorMessage: "",
+      currentPayAmount: 0,
+
     };
+  },
+  props: {
+    remainingAmount: {
+      type: Number, 
+      required: true
+    },
+  },
+  computed: {
+    isDisabled() {
+      console.log("aquiiiiiiiii", this.remainingAmount, this.currentInput, this.displayValue);
+      return this.remainingAmount === 0 && this.currentInput === "pay" 
+    },
+    displaySymbol() {
+      return this.currentInput === "persons" ? "#" : "$";
+    },
   },
   methods: {
     inputNumber(number) {
@@ -125,8 +140,14 @@ export default {
           this.payAmount = numValue;
           this.$emit("inputPayAmount", numValue);
           console.log("Cantidad de pago", this.payAmount);
+
+          this.currentPayAmount += numValue;
+          if (this.tipAmount == this.currentPayAmount) {
+            this.currentInput = "tip";
+            this.currentPayAmount = 0;
+          }
           break;
-      }
+        }
 
       // Limpiamos el display después de cada confirmación
       this.displayValue = "";
@@ -145,11 +166,12 @@ export default {
   align-items: center;
   border-color: #ec776a;
   border-width: 3px;
+  height: 100%;
   border-style: solid;
   border-radius: 10px;
   justify-items: center;
   background-color: #e6e6e6;
-  padding: 20px;
+  padding: 10px;
 }
 
 .input-type {
@@ -168,6 +190,10 @@ export default {
   width: 80%;
 }
 
+.display p {
+  margin: 0;
+}
+
 .clearButton {
   border: none;
   background-color: transparent;
@@ -179,19 +205,18 @@ export default {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  margin-top: 10px;
   justify-items: center;
 }
 
-.buttons {
-  font-size: 3em;
+.buttonsDisplay {
+  font-size: 2.5em;
   padding: 5%;
   border-radius: 15px;
   border-width: 1px;
-  width: 100%;
+  width: 80%;
 }
 
-.confirm {
+.buttonConfirm {
   background-color: #f08d81;
   color: white;
   align-self: center;
@@ -199,5 +224,25 @@ export default {
   height: 80%;
   font-size: 2em;
   border: none;
+}
+
+.buttonConfirm:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.remainingTip {
+  font-size: 1em;
+  font-weight: bold;
+  margin-top: 10px;
+  color: #ec776a;
+  background-color: white;
+  border: 1px solid #ec776a;
+  width: 80%;
+  border-radius: 15px;
+}
+
+button {
+  cursor: pointer;
 }
 </style>

@@ -9,7 +9,7 @@
         <h1 class="moneyInRegisterValue">$5,500.00</h1></div>
     </div> 
   </div>
-  <hr  style="border: 1px solid #000; margin: 20px 0;" />
+  <hr  style="border: 1px solid #000; margin: 10px 0 0 0;" />
 </template>
 
 <script>
@@ -34,6 +34,7 @@ input {
 .backButton {
   border: none;
   color: #F08D81;
+  background-color: transparent;
   padding: 15px 32px;
   text-align: center;
   text-decoration: none;
