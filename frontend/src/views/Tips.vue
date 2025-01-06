@@ -6,6 +6,7 @@
     <div class="main-content">
       <section class="section">
         <DivisionTip :totalTips="totalTips" :personsAmount="personsAmount" />
+        
         <PaymentMethod
           :methods="methods"
           @inputPaymentMethod="setPaymentMethod"
@@ -16,32 +17,34 @@
           @inputAmount="setTotalTips"
           @inputPersons="setPersonsAmount"
           @inputPayAmount="handlePayment"
+          :remainingAmount="remainingAmount" 
         />
-        <div v-if="payAmount && currentInput === 'pay'" class="remaining-tip">
-          <p>Cantidad restante: ${{ (totalTips - totalPaid).toFixed(2) }}</p>
-        </div>
       </section>
 
       <section class="section">
-        <PaymentsSection :payments="payments" />
+        <PaymentsSection :payments="payments" @remove-payment="deletePayment" />
       </section>
     </div>
-    <div class="footer">
-      <div class="total-paid">
-        <p>Total Pagado</p>
-        <p>{{ totalPaid }}</p>
+    <div class="resultPayment">
+      <div class="totalTipsResume">
+        <div class="totalPaid">
+          <p class="title orange">Total Pagado</p>
+          <p class="title orange">{{ totalPaid }}</p>
+        </div>
+        <div class="remainingPay">
+          <p class="title">Restante por Pagar </p>
+          <p class="title">{{ remainingAmount }}</p>
+        </div>
       </div>
-      <div class="remaining-to-pay">
-        <p>Restante por Pagar</p>
-        <p>{{ remainingAmount }}</p>
+      <div class="totalPaidConfirmation">
+        <button
+          @click="submitTips"
+          :class="{'payButton': totalPaid > 0, 'payButtonDisabled': totalPaid === 0}"
+          :disabled="remainingAmount > 0"
+        >
+          Pagar {{ totalPaid }} Propinas
+        </button>
       </div>
-      <button
-        @click="submitTips"
-        class="pay-button"
-        :disabled="remainingAmount > 0"
-      >
-        Pagar Propinas
-      </button>
     </div>
   </div>
 </template>
@@ -95,9 +98,15 @@ export default defineComponent({
     },
     setPersonsAmount(newPersons) {
       this.personsAmount = Number(newPersons); // Actualizamos el número de personas
+      this.currentInput = "pay"; // Cambiamos el estado a "pay"
+      console.log("cambio de estado", this.currentInput);
     },
     setPaymentMethod(method) {
       this.selectedMethod = method; // Establecemos el método de pago seleccionado
+    },
+    deletePayment(index) {
+      // Elimina el pago del array en la posición especificada
+      this.payments.splice(index, 1);
     },
     handlePayment(newPayAmount) {
       // Validación de método de pago
@@ -168,10 +177,10 @@ export default defineComponent({
         this.personsAmount = 0;
         this.payments = [];
         this.payAmount = "";
-        this.selectedMethod = "";
-        this.currentInput = "";
-
+        this.selectedMethod = "tips";
+        this.currentInput = "tip";
         // Aquí puedes manejar lo que quieras hacer con la respuesta, si es necesario
+        console.log("CAmbio el estaddo a ", this.currentInput);
         console.log("Respuesta de la API:", response.data);
       } catch (error) {
         // Si ocurre un error en la llamada a la API
@@ -195,25 +204,97 @@ export default defineComponent({
 }
 
 .header {
-  background-color: #f8f9fa;
   padding: 1rem;
   text-align: center;
+  height: 10vh;
 }
 
 .main-content {
   display: flex;
   flex: 1;
+  height: 60vh;
 }
 
 .section {
   flex: 1;
   padding: 1rem;
-  border: 1px solid #dee2e6;
 }
 
-.footer {
-  background-color: #f8f9fa;
+.resultPayment {
   padding: 1rem;
   text-align: center;
+  margin-top: 2vh;
+  height: 15vh;
+  display: flex;
+  flex-wrap: nowrap;
 }
+
+.totalTipsResume {
+  display: grid;
+  align-items: center;
+  width: 100%;
+}
+
+.totalPaidConfirmation {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.totalPaid {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 50%;
+  margin: auto;
+  text-align: left;
+  justify-content: space-between;
+}
+
+.remainingPay {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 50%;
+  margin: auto;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+
+.orange {
+  color: #ee6556;
+}
+
+.payButton {
+  background-color: #ee6556;
+  color: white;
+  border: 1px solid #ccc;
+  font-size: 1.5rem;
+  border-radius: 25px;
+  cursor: pointer;
+  width: 80%;
+  height: 50%;
+  margin: auto;
+}
+
+.payButtonDisabled {
+  background-color: transparent;
+  color: #ccc;
+  border: 1px solid #ccc;
+  font-size: 1.5rem;
+  border-radius: 25px;
+  cursor: not-allowed;
+  width: 80%;
+  height: 50%;
+  margin: auto;
+}
+
 </style>

@@ -1,9 +1,12 @@
 <template>
   <section class="right-section">
-    <h3>Pagos</h3>
-    <ul>
+    <h3 class="paySectionTitle">Pagos</h3>
+    <p v-if="payments.length === 0" class="noPaymentsMessage">Sin pagos</p>
+    <ul class="paymentsList">
       <li v-for="(payment, index) in payments" :key="index">
-        Método: {{ payment.method }} - Monto: ${{ payment.amount }}
+        <span class="paymentMethodIcon">{{ payment.payMethod }} </span>
+        <span class="paymentMethodAmount"> ${{ payment.amount }}</span>
+        <button @click="removePayment(index)" class="eliminatedPayment" >X</button>
       </li>
     </ul>
   </section>
@@ -19,31 +22,82 @@ export default {
       default: () => [],
     },
   },
+  methods: {
+    removePayment(index) {
+      // Emite un evento con el índice del pago a eliminar
+      this.$emit("remove-payment", index);
+    },
+  },
 };
 </script>
-
 <style scoped>
 .right-section {
-  border: 1px solid #ccc;
   padding: 15px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
 }
 
-h3 {
-  margin-bottom: 10px;
+.paySectionTitle {
+  font-size: 24px;
+  color: black;
+  font-weight: bold;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  width: fit-content;
 }
 
 ul {
   list-style-type: none;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-li {
-  margin: 5px 0;
-  padding: 8px;
-  background-color: #fff;
-  border-radius: 4px;
+.paymentsList li {
+  margin: 5px 5px;
+  margin: auto;
+  width: 80%;
+  padding: 15px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  color: black;
+  display: flex;
+  justify-content: space-between;
 }
+
+.paymentMethodAmount{
+  font-size: 16px;
+  color: black;
+  font-weight: bold;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  width: fit-content;
+}
+
+.eliminatedPayment {
+  color: #ee6556;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.noPaymentsMessage {
+  font-size: 16px;
+  color: black;
+  font-weight: bold;
+  text-align: left;
+  border: 2px solid #ccc;
+  box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 5% auto;
+  width: 80%;
+}
+
 </style>
