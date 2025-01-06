@@ -6,7 +6,7 @@ const router = express.Router();
 interface Tip {
   amount: number;
   persons: number;
-  payments: Payment[]; // Cambié el tipo a Payment[] para que coincida con la interfaz
+  payments: Payment[];
   paid: boolean;
 }
 
@@ -17,29 +17,50 @@ interface Payment {
 
 const tips: Tip[] = [];
 
+//METODOS GET
+
+
+//Ruta de prueba
 router.get("/test", (req: Request, res: Response) => {
   res.json({ message: "Ruta funcionando correctamente" });
 });
+
+// Ruta para ver las propinas registradas
+router.get("/tips", (req: Request, res: Response) => {
+  res.json({
+    message: "Lista de propinas",
+    data: tips,
+  });
+});
+
+// Ruta para ver los pagos realizados
+router.get("/payments", (req: Request, res: Response) => {
+  const allPayments = tips.flatMap((tip) => tip.payments);
+  res.json({ payments: allPayments });
+});
+
+
+//METODOS POST
 
 // Ruta para registrar propinas
 router.post("/tips", (req: Request, res: Response) => {
   const { amount } = req.body;
   
-  // Asegurarse de que cada propina tenga un array de pagos vacío al principio
+  //Darle a cada propina un formato específico
   const newTip: Tip = {
     amount: amount,
-    persons: 0, // Deberías permitir que el cliente envíe esta información si es necesario
+    persons: 0, 
     payments: [],
     paid: false
   };
-  
+
   tips.push(newTip);
   res.json({ message: "Propina registrada" });
 });
 
 // Ruta para realizar el pago de propinas
 router.post("/payments", (req: Request, res: Response) => {
-  console.log("Body recibido:", req.body); // Verifica que los datos se reciban correctamente
+  console.log("Body recibido:", req.body); 
 
   const { payments, amount } = req.body;
   
@@ -55,7 +76,6 @@ router.post("/payments", (req: Request, res: Response) => {
       return res.status(400).json({ error: "Cantidad de pago no válida" });
     }
 
-    // Asegurarse de que la propina tenga la propiedad 'payments' correctamente definida
     tip.payments.push({ payMethod, amount });
   });
 
@@ -75,28 +95,7 @@ router.post("/payments/complete", (req: Request, res: Response) => {
   res.json({ message: "Pago marcado como completo", payments: tip.payments });
 });
 
-
-// Ruta para ver las propinas registradas
-router.get("/tips", (req: Request, res: Response) => {
-  res.json({
-    message: "Lista de propinas",
-    data: tips,
-  });
-});
-
-// Ruta para ver los pagos realizados
-router.get("/payments", (req: Request, res: Response) => {
-  const allPayments = tips.flatMap((tip) => tip.payments);
-  res.json({ payments: allPayments });
-});
-
-// Ruta para borrar las propinas
-router.delete("/tips", (req: Request, res: Response) => {
-  tips.splice(0, tips.length);
-  res.json({ message: "Propinas borradas" });
-});
-
-//ruta para guardad la cantidad de personas
+//Ruta para guardad la cantidad de personas
 router.post("/persons", (req: Request, res: Response) => {
   const { persons, amount } = req.body;
 
@@ -107,5 +106,15 @@ router.post("/persons", (req: Request, res: Response) => {
 
   res.json({ message: "Cantidad de personas registradas" });
 });
+
+
+//METODOS DELETE
+
+// Ruta para borrar las propinas
+router.delete("/tips", (req: Request, res: Response) => {
+  tips.splice(0, tips.length);
+  res.json({ message: "Propinas borradas" });
+});
+
 
 export { router };

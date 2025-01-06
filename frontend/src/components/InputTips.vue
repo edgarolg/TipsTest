@@ -19,7 +19,6 @@
       <button @click="inputNumber('0')" class="buttonsDisplay">0</button>
       <button @click="handleConfirm" 
           :class="['buttonsDisplay', 'buttonConfirm', { buttonConfirmdisabled: isDisabled }]"
-          
         >
         <img
           src="@/../public/cheque.png"
@@ -51,7 +50,6 @@ export default {
       successMessage: "",
       errorMessage: "",
       currentPayAmount: 0,
-
     };
   },
   props: {
@@ -62,7 +60,6 @@ export default {
   },
   computed: {
     isDisabled() {
-      console.log("aquiiiiiiiii", this.remainingAmount, this.currentInput, this.displayValue);
       return this.remainingAmount === 0 && this.currentInput === "pay" 
     },
     displaySymbol() {
@@ -92,14 +89,16 @@ export default {
                 amount: numValue,
               }
             );
+            
             this.successMessage = response.data.message;
             console.log(this.successMessage);
             this.tipAmount = numValue;
-            console.log("Guardado propina", this.tipAmount);
             this.$emit("inputAmount", this.displayValue);
+            console.log("Monto de propina guardado", this.tipAmount);
             this.currentInput = "persons";
           } catch (error) {
-            console.error("Error al guardar la propina:", error);
+            console.error("Detalles completos del error:", error);
+            console.error("Respuesta de error:", error.response)
             this.errorMessage =
               error.response?.data?.message || "Error al guardar la propina.";
             return;
@@ -112,6 +111,7 @@ export default {
           // Para persons, guardamos en API y props
           this.loading = true;
           try {
+
             const response = await axios.post(
               "http://localhost:3000/api/persons",
               {
@@ -122,7 +122,7 @@ export default {
             this.successMessage = response.data.message;
             console.log(this.successMessage);
             this.personsAmount = numValue;
-            console.log("cantidad de personas", this.personsAmount);
+            console.log("cantidad de personas guardadas", this.personsAmount);
             this.$emit("inputPersons", this.personsAmount);
             this.currentInput = "pay";
           } catch (error) {
