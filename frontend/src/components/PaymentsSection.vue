@@ -4,13 +4,19 @@
     <p v-if="payments.length === 0" class="noPaymentsMessage">Sin pagos</p>
     <ul class="paymentsList">
       <li v-for="(payment, index) in payments" :key="index">
-        <span class="paymentMethodIcon">{{ payment.payMethod }} </span>
-        <span class="paymentMethodAmount"> ${{ payment.amount }}</span>
-        <button @click="removePayment(index)" class="eliminatedPayment" >X</button>
+        <img
+          :src="paymentIcons[payment.payMethod]"
+          :alt="payment.payMethod"
+          class="paymentMethodIcon"
+        />
+        <span class="paymentMethodName">{{ payment.payMethod }}</span>
+        <span class="paymentMethodAmount">${{ payment.amount }}</span>
+        <button @click="removePayment(index)" class="eliminatedPayment">X</button>
       </li>
     </ul>
   </section>
 </template>
+
 
 <script>
 export default {
@@ -21,6 +27,16 @@ export default {
       required: true,
       default: () => [],
     },
+  },
+  data() {
+    return {
+      // Asocia cada método de pago con una imagen
+      paymentIcons: {
+        "BBVA 1234": require("../../public/tarjeta.png"),
+        "Santander 1234": require("../../public/tarjeta.png"),
+        "Efectivo": require("../../public/efectivo.png"),
+      },
+    };
   },
   methods: {
     removePayment(index) {
@@ -100,4 +116,9 @@ ul {
   width: 80%;
 }
 
+.paymentMethodIcon {
+  width: 30px;
+  height: auto;
+  margin: 0;
+}
 </style>

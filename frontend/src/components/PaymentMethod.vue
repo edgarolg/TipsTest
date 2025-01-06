@@ -1,6 +1,13 @@
 <template>
   <div>
-    <h3 class="titleMethodPay">Elige el Método de Pago</h3>
+    <div class="titleContainer">
+      <img
+        src="../../public/iconoPago.png"
+        alt="Payment Icon"
+        class="titleImage"
+      />
+      <h3 class="titleMethodPay">Elige el Método de Pago</h3>
+    </div>
     <div class="methods">
       <button
         v-for="(method, index) in methods"
@@ -8,20 +15,35 @@
         :class="{ selected: method === selectedMethod }"
         @click="selectMethod(method)"
       >
-        {{ method }}
+        <img
+          :src="methodImages[method]"
+          :alt="method"
+          class="methodImage"
+        />
+        <p>{{ method }}</p>
       </button>
     </div>
   </div>
 </template>
 
+
 <script>
 export default {
   name: "PaymentMethod",
   props: ["methods", "selectedMethod"],
+  data() {
+    return {
+      methodImages: {
+        "BBVA 1234": require("../../public/tarjeta.png"),
+        "Santander 1234": require("../../public/tarjeta.png"),
+        "Efectivo": require("../../public/efectivo.png"),
+      },
+    };
+  },
   methods: {
     selectMethod(method) {
       this.$emit("inputPaymentMethod", method);
-      console.log("metodo Pago", method);
+      console.log("Método de Pago:", method);
     },
   },
 };
@@ -47,12 +69,23 @@ export default {
   width: 40%;
 }
 
+.titleContainer {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2%;
+}
+
+.titleImage {
+  width: 30px; 
+  height: auto;
+}
+
 .titleMethodPay {
   font-size: 20px;
   color: black;
   font-weight: bold;
   text-align: center;
-  margin: 5% 0;
+  margin: 2% 0;
   padding: 0;
   width: fit-content;
 }
@@ -61,4 +94,11 @@ export default {
   background: red;
   color: white;
 }
+
+.methodImage {
+  width: 30px;
+  height: auto;
+  margin: 0 auto;
+}
+
 </style>

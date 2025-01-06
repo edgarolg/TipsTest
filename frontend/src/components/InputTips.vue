@@ -23,7 +23,7 @@
         <img
           src="@/../public/cheque.png"
           alt="Save"
-          style="width: 30%; height: auto"
+          style="width: 40%; height: auto"
         />
       </button>
 
@@ -170,7 +170,7 @@ export default {
   border-style: solid;
   border-radius: 10px;
   justify-items: center;
-  background-color: #e6e6e6;
+  background-color: #FCF5F2;
   padding: 10px;
 }
 
@@ -214,13 +214,14 @@ export default {
   border-radius: 15px;
   border-width: 1px;
   width: 80%;
+  background-color: #fff;
 }
 
 .buttonConfirm {
-  background-color: #f08d81;
+  background-color: #EC6B5A;
   color: white;
   align-self: center;
-  width: 80%;
+  width: 65%;
   height: 80%;
   font-size: 2em;
   border: none;

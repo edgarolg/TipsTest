@@ -87,6 +87,7 @@ export default {
   color: black;
   width: 20%;
   font-size: 35px;
+  transform: scaleX(-1);
 }
 
 .division {
